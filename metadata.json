@@ -1,0 +1,6 @@
+{
+  "name": "VetSathi",
+  "description": "India's largest AI-powered veterinary platform connecting livestock owners, pet owners, veterinarians, pharmacies, and labs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
