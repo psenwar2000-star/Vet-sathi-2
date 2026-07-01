@@ -721,6 +721,77 @@ fun HomeTab(viewModel: VetSathiViewModel) {
             }
         }
 
+        // Developer Recognition Badge (Praveen Senwar)
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            border = BorderStroke(1.5.dp, VetSathiPrimary.copy(alpha = 0.2f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                VetSathiPrimary.copy(alpha = 0.05f),
+                                VetSathiSecondary.copy(alpha = 0.08f)
+                            )
+                        )
+                    )
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .background(VetSathiPrimary.copy(alpha = 0.2f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("👨‍💻", fontSize = 28.sp)
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(
+                            text = "Praveen Senwar",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF0F172A)
+                        )
+                        Icon(
+                            imageVector = Icons.Filled.Verified,
+                            contentDescription = "Verified Creator",
+                            tint = VetSathiPrimary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                    Text(
+                        text = "Lead Architect & Chief App Developer",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = VetSathiPrimary,
+                        letterSpacing = 0.5.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Designed and developed with high-performance Kotlin, Room Database, and Edge-to-Edge Material 3 systems.",
+                        fontSize = 10.sp,
+                        color = Color.Gray,
+                        lineHeight = 14.sp
+                    )
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
     }
 
