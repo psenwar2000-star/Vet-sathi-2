@@ -132,6 +132,10 @@ fun HomeTab(viewModel: VetSathiViewModel) {
     val walletBalance by viewModel.walletBalance.collectAsState()
     val animalsList by viewModel.animals.collectAsState()
 
+    val doctorLatitude by viewModel.doctorLatitude.collectAsState()
+    val doctorLongitude by viewModel.doctorLongitude.collectAsState()
+    val doctorEtaMinutes by viewModel.doctorEtaMinutes.collectAsState()
+
     var showAddAnimalDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -525,6 +529,63 @@ fun HomeTab(viewModel: VetSathiViewModel) {
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+
+        // Live Radar Map Section
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "LIVE AREA VET RADAR",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray,
+                        letterSpacing = 1.sp
+                    )
+                    Text(
+                        text = "Real-time trackable doctor locations and status",
+                        fontSize = 10.sp,
+                        color = Color.Gray
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFFE6F4EA))
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "LIVE GPS",
+                        fontSize = 8.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF006B5E)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            LiveVetMapComponent(
+                activeBooking = activeBooking,
+                doctorLatitude = doctorLatitude,
+                doctorLongitude = doctorLongitude,
+                doctorEtaMinutes = doctorEtaMinutes,
+                animals = animalsList,
+                onSelectDoctor = { doctorName ->
+                    viewModel.setServiceType("Doctor Home Visit")
+                    viewModel.navigateTo(Screen.BOOKING_FLOW)
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Animal Health Passport Section (Active selection)
         Row(
@@ -994,10 +1055,10 @@ fun BookingHistoryCard(booking: BookingEntity, viewModel: VetSathiViewModel) {
             confirmButton = {
                 Button(onClick = { showInvoiceDialog = false }) { Text("OK") }
             },
-            title = { Text("Official VetSathi Invoice", fontWeight = FontWeight.Bold) },
+            title = { Text("Official Pashu Sewa Sathi Invoice", fontWeight = FontWeight.Bold) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Invoice No: VS-2026-${booking.id}")
+                    Text("Invoice No: PSS-2026-${booking.id}")
                     Text("Date: ${booking.date}")
                     Text("Client Location: ${booking.location}")
                     Text("Doctor: ${booking.doctorName}")
@@ -1237,7 +1298,7 @@ fun VetAiTab(viewModel: VetSathiViewModel) {
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "VetSathi AI & Resources",
+            text = "Pashu Sewa Sathi AI & Resources",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1E293B)

@@ -30,7 +30,7 @@ fun PharmacyDashboardScreen(viewModel: VetSathiViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("VetSathi Partner Pharmacy Portal", fontWeight = FontWeight.Bold, fontSize = 16.sp) },
+                title = { Text("Pashu Sewa Sathi Partner Pharmacy Portal", fontWeight = FontWeight.Bold, fontSize = 16.sp) },
                 actions = {
                     IconButton(onClick = { viewModel.logOut() }) {
                         Icon(Icons.Filled.Logout, "Log Out", tint = Color.Red)

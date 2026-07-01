@@ -364,7 +364,7 @@ fun DoctorDashboardScreen(viewModel: VetSathiViewModel) {
                     ) {
                         Icon(Icons.Filled.AutoAwesome, "AI Sparkle", tint = Color.White)
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Draft Prescription with VetSathi AI", color = Color.White)
+                        Text("Draft Prescription with Pashu Sewa Sathi AI", color = Color.White)
                     }
 
                     OutlinedTextField(

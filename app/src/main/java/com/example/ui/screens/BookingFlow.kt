@@ -401,72 +401,13 @@ fun BookingFlowScreen(viewModel: VetSathiViewModel) {
 
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp)
-                                    .clip(RoundedCornerShape(18.dp))
-                                    .background(Color(0xFFE2EADD))
-                                    .border(1.dp, Color(0xFFC5CDBC), RoundedCornerShape(18.dp))
-                            ) {
-                                // Draw mock grid and markers on canvas
-                                Canvas(modifier = Modifier.fillMaxSize()) {
-                                    // Grid lines
-                                    val gridColor = Color(0xFFB1B9A8)
-                                    val lineCount = 10
-                                    for (i in 0..lineCount) {
-                                        val x = size.width * i / lineCount
-                                        drawLine(gridColor, start = androidx.compose.ui.geometry.Offset(x, 0f), end = androidx.compose.ui.geometry.Offset(x, size.height), strokeWidth = 1f)
-                                        val y = size.height * i / lineCount
-                                        drawLine(gridColor, start = androidx.compose.ui.geometry.Offset(0f, y), end = androidx.compose.ui.geometry.Offset(size.width, y), strokeWidth = 1f)
-                                    }
-                                }
-
-                                // Farmer marker (Center)
-                                Box(
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .size(14.dp)
-                                        .background(Color.Red, CircleShape)
-                                        .border(2.dp, Color.White, CircleShape)
-                                )
-
-                                // Doctor marker moving live towards center
-                                val doctorAlignment = when {
-                                    doctorEtaMinutes > 10 -> Alignment.TopEnd
-                                    doctorEtaMinutes > 5 -> Alignment.TopStart
-                                    doctorEtaMinutes > 2 -> Alignment.BottomStart
-                                    else -> Alignment.Center
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        .align(doctorAlignment)
-                                        .offset(x = (-10).dp, y = 10.dp)
-                                        .size(32.dp)
-                                        .background(Color(0xFF006B5E), CircleShape)
-                                        .border(2.dp, Color.White, CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(Icons.Filled.DirectionsCar, "Doctor car", tint = Color.White, modifier = Modifier.size(16.dp))
-                                }
-
-                                // Map labels
-                                Card(
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.8f)),
-                                    modifier = Modifier
-                                        .align(Alignment.BottomStart)
-                                        .padding(8.dp)
-                                ) {
-                                    Text(
-                                        text = "Vet GPS: ${"%.4f".format(doctorLatitude)}, ${"%.4f".format(doctorLongitude)}",
-                                        color = Color.White,
-                                        fontSize = 9.sp,
-                                        modifier = Modifier.padding(6.dp)
-                                    )
-                                }
-                            }
+                            LiveVetMapComponent(
+                                activeBooking = activeBooking,
+                                doctorLatitude = doctorLatitude,
+                                doctorLongitude = doctorLongitude,
+                                doctorEtaMinutes = doctorEtaMinutes,
+                                animals = animalsList
+                            )
 
                             Spacer(modifier = Modifier.height(12.dp))
 

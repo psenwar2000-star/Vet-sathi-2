@@ -44,7 +44,7 @@ fun AiAssistantScreen(viewModel: VetSathiViewModel) {
     // Chat states
     val chatHistory = remember {
         mutableStateListOf(
-            Pair("assistant", "Namaste! I am VetSathi AI. You can describe your animal's health symptoms in Hindi, English, or regional languages. I can diagnose bovine bloat, lumpy skin disease, mastitis, or pet parvovirus. How can I assist you today?")
+            Pair("assistant", "Namaste! I am Pashu Sewa Sathi AI. You can describe your animal's health symptoms in Hindi, English, or regional languages. I can diagnose bovine bloat, lumpy skin disease, mastitis, or pet parvovirus. How can I assist you today?")
         )
     }
     var currentChatMsg by remember { mutableStateOf("") }
@@ -57,7 +57,7 @@ fun AiAssistantScreen(viewModel: VetSathiViewModel) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Filled.AutoAwesome, "Sparkle", tint = VetSathiPrimary)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("VetSathi Diagnostic AI Portal", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Text("Pashu Sewa Sathi Diagnostic AI Portal", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
                 },
                 navigationIcon = {
@@ -222,7 +222,7 @@ fun AiAssistantScreen(viewModel: VetSathiViewModel) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Filled.Recommend, "Analysis Done", tint = VetSathiPrimary)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("VetSathi Diagnostics Result", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Color(0xFF0F2D1F))
+                            Text("Pashu Sewa Sathi Diagnostics Result", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Color(0xFF0F2D1F))
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -267,7 +267,7 @@ fun AiAssistantScreen(viewModel: VetSathiViewModel) {
                                     Button(
                                         onClick = {
                                             viewModel.setServiceType("Emergency SOS")
-                                            viewModel.createBooking("VetSathi AI diagnostic matching: $userSymptomText")
+                                            viewModel.createBooking("Pashu Sewa Sathi AI diagnostic matching: $userSymptomText")
                                             viewModel.navigateTo(Screen.BOOKING_FLOW)
                                         },
                                         colors = ButtonDefaults.buttonColors(containerColor = VetSathiTertiary),
@@ -368,7 +368,7 @@ fun AiAssistantScreen(viewModel: VetSathiViewModel) {
                         OutlinedTextField(
                             value = currentChatMsg,
                             onValueChange = { currentChatMsg = it },
-                            placeholder = { Text("Ask VetSathi AI: 'cow fever treatment'...", fontSize = 11.sp) },
+                            placeholder = { Text("Ask Pashu Sewa Sathi AI: 'cow fever treatment'...", fontSize = 11.sp) },
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.weight(1f)
                         )
@@ -384,9 +384,9 @@ fun AiAssistantScreen(viewModel: VetSathiViewModel) {
                                     scope.launch {
                                         delay(1500)
                                         val reply = when {
-                                            userText.lowercase().contains("fever") -> "For a cow running a high fever, isolation is critical. Ensure fresh water is always available. You can safely administer oral Paracetamol or Meloxicam (consult registered VetSathi doctor via 'Video Consultation' for dose confirmation depending on body weight)."
+                                            userText.lowercase().contains("fever") -> "For a cow running a high fever, isolation is critical. Ensure fresh water is always available. You can safely administer oral Paracetamol or Meloxicam (consult registered Pashu Sewa Sathi doctor via 'Video Consultation' for dose confirmation depending on body weight)."
                                             userText.lowercase().contains("bloat") -> "Acute bloat (swollen stomach) can be fatal. Keep the animal standing, insert a wooden bit in the mouth, and administer 100ml anti-bloating suspension (Tympol/Anisap) or liquid paraffin. If breathing is shallow, press Emergency SOS immediately."
-                                            else -> "Thank you for sharing. I recommend capturing a physical symptom picture and submitting it via our VetAI Scanner module at the top of this portal. This helps Gemini AI parse the visual symptoms accurately."
+                                            else -> "Thank you for sharing. I recommend capturing a physical symptom picture and submitting it via our VetAI Scanner module at the top of this portal. This helps the offline diagnosis engine parse the visual symptoms accurately."
                                         }
                                         chatHistory.add(Pair("assistant", reply))
                                         isChatLoading = false

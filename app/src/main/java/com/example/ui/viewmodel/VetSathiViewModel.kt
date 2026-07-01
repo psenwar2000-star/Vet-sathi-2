@@ -34,6 +34,7 @@ enum class Screen {
 class VetSathiViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = VetSathiRepository(application)
+    private val prefs = application.getSharedPreferences("vetsathi_prefs", android.content.Context.MODE_PRIVATE)
 
     // Current app routing and role state
     private val _currentScreen = MutableStateFlow(Screen.ROLE_SELECTION)
@@ -103,6 +104,34 @@ class VetSathiViewModel(application: Application) : AndroidViewModel(application
     val walletBalance: StateFlow<Double> = _walletBalance.asStateFlow()
 
     init {
+        val savedRole = prefs.getString("role", null)
+        val savedLoggedIn = prefs.getBoolean("is_logged_in", false)
+        val savedScreen = prefs.getString("screen", null)
+
+        if (savedRole != null) {
+            try {
+                _currentRole.value = UserRole.valueOf(savedRole)
+            } catch (e: Exception) {
+                // ignore
+            }
+        }
+        _isLoggedIn.value = savedLoggedIn
+        if (savedScreen != null) {
+            try {
+                _currentScreen.value = Screen.valueOf(savedScreen)
+            } catch (e: Exception) {
+                _currentScreen.value = Screen.ROLE_SELECTION
+            }
+        } else if (savedLoggedIn) {
+            _currentScreen.value = when (_currentRole.value) {
+                UserRole.OWNER -> Screen.OWNER_HOME
+                UserRole.DOCTOR -> Screen.DOCTOR_DASHBOARD
+                UserRole.ADMIN -> Screen.ADMIN_DASHBOARD
+                UserRole.PHARMACY -> Screen.PHARMACY_DASHBOARD
+                UserRole.LABORATORY -> Screen.LAB_DASHBOARD
+            }
+        }
+
         viewModelScope.launch {
             repository.seedMockDataIfNeeded()
             // Set first animal as default if available
@@ -127,19 +156,29 @@ class VetSathiViewModel(application: Application) : AndroidViewModel(application
     fun verifyOtp() {
         if (_otpInput.value == "1234" || _otpInput.value.length == 4) {
             _isLoggedIn.value = true
-            _currentScreen.value = when (_currentRole.value) {
+            val targetScreen = when (_currentRole.value) {
                 UserRole.OWNER -> Screen.OWNER_HOME
                 UserRole.DOCTOR -> Screen.DOCTOR_DASHBOARD
                 UserRole.ADMIN -> Screen.ADMIN_DASHBOARD
                 UserRole.PHARMACY -> Screen.PHARMACY_DASHBOARD
                 UserRole.LABORATORY -> Screen.LAB_DASHBOARD
             }
+            _currentScreen.value = targetScreen
+            prefs.edit()
+                .putBoolean("is_logged_in", true)
+                .putString("screen", targetScreen.name)
+                .putString("role", _currentRole.value.name)
+                .apply()
         }
     }
 
     fun selectRole(role: UserRole) {
         _currentRole.value = role
         _currentScreen.value = Screen.AUTH
+        prefs.edit()
+            .putString("role", role.name)
+            .putString("screen", Screen.AUTH.name)
+            .apply()
     }
 
     fun logOut() {
@@ -148,10 +187,17 @@ class VetSathiViewModel(application: Application) : AndroidViewModel(application
         _phoneInput.value = ""
         _otpInput.value = ""
         _currentScreen.value = Screen.ROLE_SELECTION
+        prefs.edit()
+            .putBoolean("is_logged_in", false)
+            .putString("screen", Screen.ROLE_SELECTION.name)
+            .apply()
     }
 
     fun navigateTo(screen: Screen) {
         _currentScreen.value = screen
+        prefs.edit()
+            .putString("screen", screen.name)
+            .apply()
     }
 
     fun selectAnimal(animal: AnimalEntity) {

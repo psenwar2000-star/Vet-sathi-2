@@ -11,6 +11,7 @@ import com.example.data.model.BookingEntity
 import com.example.data.model.HealthRecordEntity
 import com.example.data.model.SchemeEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
@@ -168,83 +169,11 @@ class VetSathiRepository(private val context: Context) {
     }
 
     /**
-     * Executes real Gemini AI Disease Detection or runs high-quality local heuristic model.
+     * Executes real Disease Detection using the high-quality local offline heuristic engine.
      */
     suspend fun analyzeSymptomImage(symptomDescription: String, bitmap: Bitmap?): String = withContext(Dispatchers.IO) {
-        val apiKey = try {
-            BuildConfig.GEMINI_API_KEY
-        } catch (e: Exception) {
-            ""
-        }
-
-        if (apiKey.isEmpty() || apiKey == "MY_GEMINI_API_KEY") {
-            Log.w("VetSathiRepository", "API Key is missing or placeholder. Using offline heuristic engine.")
-            return@withContext getOfflineAIPrediction(symptomDescription)
-        }
-
-        try {
-            val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=$apiKey"
-            
-            val jsonRequest = JSONObject()
-            val contentsArray = JSONArray()
-            val contentObj = JSONObject()
-            val partsArray = JSONArray()
-
-            // Add text part
-            val textPart = JSONObject().put("text", 
-                "You are VetSathi AI, an expert veterinary assistant for Indian livestock (cows, buffaloes, goats) and pets. " +
-                "Analyze this veterinary symptom: '$symptomDescription'. " +
-                "Provide a detailed diagnosis containing: " +
-                "1. Predicted Disease / Condition Name " +
-                "2. Emergency Severity Level (Low, Medium, High, SOS Critical) " +
-                "3. Likely Causes " +
-                "4. Immediate Home Remedies or First Aid " +
-                "5. Recommended Professional Treatments & Medication " +
-                "Keep the explanation practical, high-trust, and structured using clean formatting."
-            )
-            partsArray.put(textPart)
-
-            // Add image part if provided
-            if (bitmap != null) {
-                val base64Image = bitmapToBase64(bitmap)
-                val imagePart = JSONObject().put("inlineData", JSONObject()
-                    .put("mimeType", "image/jpeg")
-                    .put("data", base64Image)
-                )
-                partsArray.put(imagePart)
-            }
-
-            contentObj.put("parts", partsArray)
-            contentsArray.put(contentObj)
-            jsonRequest.put("contents", contentsArray)
-
-            val mediaType = "application/json; charset=utf-8".toMediaType()
-            val requestBody = jsonRequest.toString().toRequestBody(mediaType)
-
-            val request = Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build()
-
-            val response = httpClient.newCall(request).execute()
-            if (response.isSuccessful) {
-                val responseBody = response.body?.string() ?: ""
-                val responseJson = JSONObject(responseBody)
-                val candidates = responseJson.getJSONArray("candidates")
-                if (candidates.length() > 0) {
-                    val firstCandidate = candidates.getJSONObject(0)
-                    val content = firstCandidate.getJSONObject("content")
-                    val parts = content.getJSONArray("parts")
-                    if (parts.length() > 0) {
-                        return@withContext parts.getJSONObject(0).getString("text")
-                    }
-                }
-            }
-            return@withContext "Error analyzing with Gemini: ${response.message}. Falling back to smart rules:\n\n" + getOfflineAIPrediction(symptomDescription)
-        } catch (e: Exception) {
-            Log.e("VetSathiRepository", "Gemini API call failed", e)
-            return@withContext "AI service offline (or rate limited). Showing premium heuristic diagnosis:\n\n" + getOfflineAIPrediction(symptomDescription)
-        }
+        delay(1000) // Small delay to simulate local processing
+        getOfflineAIPrediction(symptomDescription)
     }
 
     private fun bitmapToBase64(bitmap: Bitmap): String {

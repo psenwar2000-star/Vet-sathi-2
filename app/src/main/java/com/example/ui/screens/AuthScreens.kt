@@ -90,7 +90,7 @@ fun RoleSelectionScreen(viewModel: VetSathiViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "VetSathi",
+                text = "Pashu Sewa Sathi",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF00201C),
@@ -276,7 +276,7 @@ fun AuthScreen(viewModel: VetSathiViewModel) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "VetSathi Mobile Login",
+                text = "Pashu Sewa Sathi Mobile Login",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White

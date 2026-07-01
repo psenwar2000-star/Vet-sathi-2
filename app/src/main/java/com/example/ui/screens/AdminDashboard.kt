@@ -34,7 +34,7 @@ fun AdminDashboardScreen(viewModel: VetSathiViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("VetSathi Super-Admin Console", fontWeight = FontWeight.Bold, fontSize = 16.sp) },
+                title = { Text("Pashu Sewa Sathi Super-Admin Console", fontWeight = FontWeight.Bold, fontSize = 16.sp) },
                 actions = {
                     IconButton(onClick = { viewModel.logOut() }) {
                         Icon(Icons.Filled.Logout, "Log Out", tint = Color.Red)
